@@ -1,0 +1,40 @@
+
+    
+.result{
+    display: flex;
+    justify-content: center ;
+    align-items: center;
+    flex-direction: column;
+    height: 155px;
+    border-radius: 30px;
+    border: 2px solid black;
+    margin-top: 40px;
+}
+.playerresult{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.player1{
+    border: 2px solid black;
+    height: 100%;
+    width: 500px;
+    text-align: center;
+}
+.player2 {
+    border: 2px solid black;
+    height: 100%;
+    width: 500px;
+    text-align: center;
+}
+.winner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+    margin-left: 250px;
+    border-radius: 30px;
+    border: 2px solid black ;
+}

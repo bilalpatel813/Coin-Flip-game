@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -9,12 +9,35 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="content">
   <h1> WELCOME</h1><br>
-  <h1> COIN FLIP GAME</h1>
-  <h2>guess the toss</h2>
-  <button id="head">HEADS</button>
-  <button id="tail">TAILS</button>
-  <h1>RESULT:</h1><h1 id="resultshow">first try</h1>
+  <h1 class="heading"> COIN FLIP GAME</h1>
+  <p><b>guess the toss</b></p>
+  </div>
+  <div class="buttons">
+  <button id="head"><b>HEADS</b></button>
+  <button id="tail"><b>TAILS</b></button>
+  </div>
+  <div class="result">
+  <h1 id="resultshow">RESULT:</h1>
+  <p><b>TRY AGAIN IN NEXT ROUND</b></p></div>
+  <div class="playerresult">
+    <div class="player1">
+      <h1>PLAYER 1</h1>
+      <p id="first">YOU WIN</p>
+      <p id="second">YOU LOSE</p>
+      <p id="third">YOU WIN</p>
+    </div>
+    <div class="player2">
+      <h1>PLAYER 2</h1>
+      <p id="first2">YOU LOSE</p>
+      <p id="second2">YOU WIN</p>
+      <p id="third2">YOU LOSE</p>
+    </div>
+  </div>
+  <div class="winner">
+    <h1>PLAYER 1 wins! </h1>
+  </div>
   <script src="main.js"></script>
 </body>
 </html>

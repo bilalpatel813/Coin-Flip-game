@@ -1,4 +1,4 @@
-console.log('Hello World!');
+ console.log('Hello World!');
  let computer = Math.random();
  let computerMove;
  let result;
@@ -13,11 +13,11 @@ document.getElementById("head" ).onclick= function(){
     computerMove="tails"
   }
   if(computerMove==="heads"){
-    result= "you win";
+    result= "YOU WIN! ";
     console.log(result);
   }
   else{
-    result= "you lose";
+    result= "YOU LOSE";
     console.log(result);
   }
   document.getElementById("resultshow").textContent= `${result}`; 
@@ -33,11 +33,11 @@ document.getElementById("tail").onclick = function() {
     computerMove = "heads"
   }
   if (computerMove === "tails") {
-    result = "you win";
+    result = "YOU WIN!";
     console.log(result);
   }
   else {
-    result = "you lose";
+    result = "YOU LOSE";
     console.log(result);
   }
   document.getElementById("resultshow").textContent = `${result}`;
