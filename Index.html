@@ -1,43 +1,318 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Match Coin Toss Challenge</title>
+    <style>
+        :root {
+            --primary: #e94560;
+            --bg-dark: #1a1a2e;
+            --card-bg: #16213e;
+            --accent: #0f3460;
+            --gold: #f1c40f;
+            --bronze: #e67e22;
+        }
 
-  <title>CoinFlip</title>
-  <link rel="stylesheet" href="style.css">
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            width: 90%;
+            max-width: 400px;
+            margin: 20px;
+        }
+
+        h1 { margin-top: 0; color: var(--primary); font-size: 1.5rem; }
+
+        /* Rules Section */
+        .rules-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent);
+            line-height: 1.4;
+        }
+
+        /* Player Settings */
+        .player-settings {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            background: var(--bg-dark);
+            color: white;
+            text-align: center;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        /* Role Selection */
+        .selection-wrapper { margin-bottom: 25px; }
+        .role-btns {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .role-btn {
+            background: var(--accent);
+            border: 2px solid var(--primary);
+            color: white;
+            padding: 8px 15px;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        .role-btn.active { background: var(--primary); }
+        .role-btn:first-child { border-radius: 10px 0 0 10px; }
+        .role-btn:last-child { border-radius: 0 10px 10px 0; }
+        #roleText { font-size: 0.8rem; color: #888; display: block; margin-top: 5px; }
+
+        /* 3D Coin Animation */
+        .coin-container {
+            perspective: 1000px;
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+        }
+
+        #coin {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .heads, .tails {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            backface-visibility: hidden;
+            border: 6px solid #d4af37;
+            box-sizing: border-box;
+        }
+
+        .heads { background: var(--gold); color: #8b7500; }
+        .tails { 
+            background: var(--bronze); 
+            color: #5d2906; 
+            transform: rotateY(180deg); 
+        }
+
+        /* Game Controls */
+        #flipBtn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        #flipBtn:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
+
+        /* History Table */
+        .results-box {
+            margin-top: 25px;
+            background: var(--bg-dark);
+            padding: 15px;
+            border-radius: 12px;
+        }
+        .history-list { display: flex; justify-content: space-around; margin-top: 10px; }
+        .history-item { font-size: 0.9rem; background: var(--accent); padding: 5px 10px; border-radius: 5px; min-width: 60px; }
+
+        /* Popup Styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .popup-content {
+            background: white;
+            color: #222;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transform: scale(0.5);
+            opacity: 0;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .popup.show .popup-content { transform: scale(1); opacity: 1; }
+
+        .popup h2 { color: var(--primary); margin-top: 0; }
+        .popup button {
+            background: var(--bg-dark); color: white; border: none;
+            padding: 10px 25px; border-radius: 10px; cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
-  <div class="content">
-  <h1> WELCOME</h1><br>
-  <h1 class="heading"> COIN FLIP GAME</h1>
-  <p><b>guess the toss</b></p>
-  </div>
-  <div class="buttons">
-  <button id="head"><b>HEADS</b></button>
-  <button id="tail"><b>TAILS</b></button>
-  </div>
-  <div class="result">
-  <h1 id="resultshow">RESULT:</h1>
-  <p><b>TRY AGAIN IN NEXT ROUND</b></p></div>
-  <div class="playerresult">
-    <div class="player1">
-      <h1>PLAYER 1</h1>
-      <p id="first">YOU WIN</p>
-      <p id="second">YOU LOSE</p>
-      <p id="third">YOU WIN</p>
+
+    <div class="game-container">
+        <h1>Coin Flip Saga</h1>
+
+        <div class="rules-box">
+            <b>The Goal:</b> Best out of 3. Pick your side, toss the coin, and the player with the most matches wins the series!
+        </div>
+
+        <div class="player-settings">
+            <input type="text" id="p1Name" placeholder="P1 Name" value="Player 1">
+            <input type="text" id="p2Name" placeholder="P2 Name" value="Player 2">
+        </div>
+
+        <div class="selection-wrapper">
+            <div class="role-btns">
+                <button id="btnH" class="role-btn active" onclick="setRole('Heads')">P1: Heads</button>
+                <button id="btnT" class="role-btn" onclick="setRole('Tails')">P1: Tails</button>
+            </div>
+            <span id="roleText">Player 1 is Heads | Player 2 is Tails</span>
+        </div>
+
+        <div class="coin-container">
+            <div id="coin">
+                <div class="heads">H</div>
+                <div class="tails">T</div>
+            </div>
+        </div>
+
+        <button id="flipBtn">TOSS COIN</button>
+
+        <div class="results-box">
+            <b>Series Progress</b>
+            <div class="history-list">
+                <div class="history-item" id="m1">-</div>
+                <div class="history-item" id="m2">-</div>
+                <div class="history-item" id="m3">-</div>
+            </div>
+        </div>
     </div>
-    <div class="player2">
-      <h1>PLAYER 2</h1>
-      <p id="first2">YOU LOSE</p>
-      <p id="second2">YOU WIN</p>
-      <p id="third2">YOU LOSE</p>
+
+    <div id="winnerPopup" class="popup">
+        <div class="popup-content">
+            <h2 id="winnerText">Winner!</h2>
+            <p>Great match! Would you like a rematch?</p>
+            <button onclick="resetGame()">RESET SERIES</button>
+        </div>
     </div>
-  </div>
-  <div class="winner">
-    <h1>PLAYER 1 wins! </h1>
-  </div>
-  <script src="main.js"></script>
+
+    <script>
+        let matches = [];
+        let p1Role = 'Heads'; 
+        const coin = document.getElementById('coin');
+        const flipBtn = document.getElementById('flipBtn');
+        const roleText = document.getElementById('roleText');
+        const popup = document.getElementById('winnerPopup');
+
+        function setRole(role) {
+            if (matches.length > 0) return; // Lock during game
+            p1Role = role;
+            document.getElementById('btnH').classList.toggle('active', role === 'Heads');
+            document.getElementById('btnT').classList.toggle('active', role === 'Tails');
+            
+            if(role === 'Heads') {
+                roleText.innerText = "Player 1 is Heads | Player 2 is Tails";
+            } else {
+                roleText.innerText = "Player 1 is Tails | Player 2 is Heads";
+            }
+        }
+
+        flipBtn.addEventListener('click', () => {
+            if (matches.length >= 3) return;
+
+            flipBtn.disabled = true;
+            const isHeads = Math.random() < 0.5;
+            const result = isHeads ? 'Heads' : 'Tails';
+            
+            // Randomize spins (at least 5 full rotations + result)
+            const extraSpins = (Math.floor(Math.random() * 5) + 5) * 360;
+            const finalRotation = isHeads ? extraSpins : extraSpins + 180;
+            
+            coin.style.transform = `rotateY(${finalRotation}deg)`;
+
+            // Wait for animation
+            setTimeout(() => {
+                matches.push(result);
+                document.getElementById(`m${matches.length}`).innerText = result;
+                
+                if (matches.length === 3) {
+                    showWinner();
+                } else {
+                    flipBtn.disabled = false;
+                }
+            }, 2100);
+        });
+
+        function showWinner() {
+            const name1 = document.getElementById('p1Name').value || "Player 1";
+            const name2 = document.getElementById('p2Name').value || "Player 2";
+            
+            const headsCount = matches.filter(m => m === 'Heads').length;
+            const tailsCount = matches.filter(m => m === 'Tails').length;
+            
+            let finalWinner = "";
+            
+            if (p1Role === 'Heads') {
+                finalWinner = headsCount > tailsCount ? name1 : name2;
+            } else {
+                finalWinner = tailsCount > headsCount ? name1 : name2;
+            }
+
+            document.getElementById('winnerText').innerText = `🏆 ${finalWinner} Wins!`;
+            popup.style.display = 'flex';
+            setTimeout(() => popup.classList.add('show'), 10);
+        }
+
+        function resetGame() {
+            matches = [];
+            document.querySelectorAll('.history-item').forEach(el => el.innerText = "-");
+            popup.classList.remove('show');
+            setTimeout(() => popup.style.display = 'none', 400);
+            coin.style.transform = `rotateY(0deg)`;
+            flipBtn.disabled = false;
+        }
+    </script>
 </body>
 </html>
